@@ -1,0 +1,171 @@
+%\VignetteIndexEntry{CorMut}
+%\VignetteDepends{methods,Biostrings,seqinr,igraph}
+%\VignetteKeywords{selection pressure,mutual information}
+%\VignettePackage{CorMut}
+
+\documentclass[a4paper]{article}
+
+\usepackage{Sweave}
+\usepackage{times}
+
+\title{Detecting the correlated mutations based on selection pressure with {\tt CorMut}}
+\author{Zhenpeng Li}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+
+In genetics, the Ka/Ks ratio is the ratio of the number of non-synonymous substitutions per non-synonymous site (Ka) to the number of synonymous substitutions per synonymous site (Ks)[1]. Ka/Ks ratio was used as an indicator of selective pressure acting on a protein-coding gene. A Ka/Ks ratio of 1 indicates neutral selection, i.e., the observed ratio of non-synonymous mutations versus synonymous mutations exactly matches the ratio expected under a random mutation model. Thus, amino acid changes are neither being selected for nor against. A Ka/Ks value of <1 indicates negative selection pressure. That is to say most amino acid changes are deleterious and are selected against, producing an imbalance in the observed mutations that favors synonymous mutations. In the condition of Ka/Ks>1 , it indicates that amino acid changes are favored, i.e., they increase the organism's fitness. This unusual condition may reflect a change in the function of a gene or a change in environmental conditions that forces the organism to adapt. For example, highly variable viruses mutations which confer resistance to new antiviral drugs might be expected to undergo positive selection in a patient population treated with these drugs, such as HIV and HCV.
+\\
+The concept of correlated mutations is one of the basic ideas in evolutionary biology. The amino acid substitution rates are expected to be limited by functional constraints. Given the functional constraints operating on gene, a mutation in one position can be compensated by an additional mutation. Then mutation patterns can be formed by correlated mutations responsible for specific conditions.
+\\
+Here, we developed an R/Bioconductor package to detect the correlated mutations among positive selection sites by combining ka/ks ratio and correlated mutations analysis. The definition of Ka/Ks is based on Chen et al[2]. {\tt CorMut} provides functions for computing kaks for individual site or specific amino and detecting correlated mutation among them. Two methods are provided for detecting correlated mutation, including conditional selection pressure and mutual information, the computation consists of two steps: First, the positive selection sites are detected; Second, the mutation correlation are computed among the positive selection sites. Note that the first step is optional. Meanwhile, {\tt CorMut} facilitates the comparison of the correlated mutations between two conditions by the means of correlated mutation network.
+
+\section{Methods}
+
+2.1 Ka/Ks calculation for individual codon position and specific amino acid substitutions
+\\
+The Ka/Ks values for individual codon (specific amino acid substitutions) were determined as described by Chen et al. The Ka/Ks of individual codon (specific amino acid substitution (X2Y) for a codon) was computed as follows: 
+\\
+$\frac{{Ka}}{{Ks}} = \frac{{\frac{{{N_Y}}}{{{N_S}}}}}{{\frac{{{n_{Y,t}}{f_t} + {n_{Y,v}}{f_v}}}{{{n_{S,t}}{f_t} + {n_{S,v}}{f_v}}}}}$
+\\
+where NY and NS are the count of samples with nonsynonymous mutations(X2Y mutation) at that codon and the count samples with of synonymous mutations observed at that codon respectively. Then, NY/NS is normalized by the ratio expected under a random mutation model (i.e., in the absence of any selection pressure), which was represented as the denominator of the formula. In the random mutation model, ft and fv indicate the transition and transversion frequencies respectively, and they were measured from the entire data set according to the following formulas: ft = Nt/ntS and fv = Nv/nvS, where S is the total number of samples; Nt and Nv are the numbers of observed transition and transversion mutations, respectively; nt and nv are the number of possible transitions and transversions in the focused region (simply equal to its length L and 2L respectively).LOD confidence score for a codon or mutation X2Y to be under positive selection pressure was calculated by the following formula:
+\\
+$LOD =  - {\log _{10}}p(i \ge {N_{YaXa}}|N,q,{\left( {\frac{{{K_a}}}{{{K_s}}}} \right)_{Y|Xa}} = 1) =  - {\log _{10}}\sum\limits_{i = {N_{YaXa}}}^N {\left( {\begin{array}{*{20}{c}}
+   N  \\
+   i  \\
+\end{array}} \right)} {q^i}{(1 - q)^{N - i}}$
+Where N = NYaXa + NYsXa and q as defined above.
+If LOD > 2, the positive selection is significant.
+\\
+2.2 Mutual information
+\\
+MI content was adopted as a measure of the correlation between residue substitutions[3]. Accordingly, each of the N columns in the multiple sequence alignment generated for a protein of N codons is considered as a discrete random variable $Xi(1 \le i \le N)$. When compute Mutual information between codons, $Xi (1 \le i \le N)$ takes on one of the 20 amino-acid types with some probability, then compute the Mutual information between two sites for specific amino acid substitutions, $Xi (1 \le i \le N)$ were only divided two parts (the specific amino acid mutation and the other) with some probability. Mutual information describes the mutual dependence of the two random variables Xi, Xj, The MI associated the random variables Xi and Xj corresponding to the ith and jth columns is defined as
+\\
+$I({X_i},{X_j}) = S({X_i}) + S({X_j}) - S({X_i},{X_j}) = S({X_i}) - S({X_i}|{X_j})$
+\\
+Where
+\\
+$S({X_i}) =  - \sum\limits_{all{x_{_i}}}^{} {P({X_i} = {x_i})\log P({X_i} = {x_i})}$
+\\
+is the entropy of Xi,
+\\
+$S({X_i}|{X_j}) =  - \sum\limits_{all{x_i}} {\sum\limits_{all{x_j}} {P({X_i} = {x_i},{X_j} = {x_j})\log P({X_i} = {x_i}|{X_j} = {x_j})} }$
+\\
+is the conditional entropy of Xi given Xj, S(Xi, Xj) is the joint entropy of Xi and Xj. Here P(Xi = xi, Xj = xj) is the joint probability of occurrence of amino-acid types xi and xj at the ith and jth positions, respectively, P(Xi = xi) and P(Xj = xj) are the corresponding singlet probabilities.
+\\
+I(Xi, Xj) is the ijth element of the $N \times N$ MI matrix I corresponding to the examined multiple sequence alignment.
+
+\section{Implementation}
+
+3.1 Process the multiple sequence alignment files
+{\it seqFormat} replace the raw bases with common bases and delete the gaps according to the reference sequence. As one raw base has several common bases, then a base causing amino mutation will be randomly chosen. Here, HIV protease sequences of treatment-naive and treatment will be used as examples.
+<<echo=TRUE>>=
+library(CorMut)
+examplefile=system.file("extdata","PI_treatment.aln",package="CorMut")
+examplefile02=system.file("extdata","PI_treatment_naive.aln",package="CorMut")
+example=seqFormat(examplefile)
+example02= seqFormat(examplefile02)
+@
+3.2 Compute kaks for individual codon
+<<echo=TRUE>>=
+result=kaksCodon(example)
+fresult=filterSites(result)
+head(fresult)
+@
+3.3 Compute kaks for individual amino mutation
+<<echo=TRUE>>=
+result=kaksAA(example)
+fresult=filterSites(result)
+head(fresult)
+@
+3.4 Compute the conditional kaks(conditional selection pressure) among codons
+<<echo=TRUE>>=
+result=ckaksCodon(example)
+@
+\begin{center}
+<<fig=TRUE, echo=TRUE>>=
+plot(result)
+@
+\end{center}
+<<echo=TRUE>>=
+fresult=filterSites(result)
+head(fresult)
+@
+3.5 Compute the conditional kaks(conditional selection pressure) among amino mutations
+<<echo=TRUE>>=
+result=ckaksAA(example)
+@
+\begin{center}
+<<fig=TRUE, echo=TRUE>>=
+plot(result)
+@
+\end{center}
+<<echo=TRUE>>=
+fresult=filterSites(result)
+head(fresult)
+@
+3.6 Compute the mutual information among codons
+An instance with two matrixes will be returned, they are mutation information matrix and p matrix, The ijth element of the $N \times N$ MI matrix indicates the mutation information or p value between position i and position j.
+<<echo=TRUE>>=
+result=miCodon(example)
+@
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+plot(result)
+@
+\end{center}
+<<echo=TRUE>>=
+fresult=filterSites(result)
+head(fresult)
+@
+3.7 Compute the mutual information among individual amino mutations
+\par
+An instance with two matrixes will be returned, they are mutation information matrix and p matrix, The ijth element of the $N \times N$ MI matrix indicates the mutation information or p value between two amino mutations.
+\par
+<<echo=TRUE>>=
+result=miAA(example)
+@
+\begin{center}
+<<fig=TRUE, echo=TRUE>>=
+plot(result)
+@
+\end{center}
+<<echo=TRUE>>=
+fresult=filterSites(result)
+head(fresult)
+@
+\par
+3.8 Comparison of the correlated mutations between two conditions by the means of correlated mutation network
+\par
+{\it biCompare} compare the correlated mutation relationship between two conditions, such as HIV treatment-naive and treatment. The result of {\it biCompare} can be visualized by {\it plot} method. Only positive selection codons or amino mutations were displayed on the plot, blue nodes indicate the distinct positive codons or amino mutations of the first condition, that is to say these nodes will be non-positive selection in second condition. While red nodes indicate the distinct positive codons or amino mutations appeared in the second condition. {\it plot} also has an option for displaying the unchanged positive selection nodes in both conditions. If {\it plotUnchanged} is FALSE, the unchanged positive selection nodes in both conditions will not be displayed.
+\par
+<<echo=TRUE>>=
+#biexample=new("biCkaksAA",seq_formated=example02,seq_formated02=example)
+biexample=biCkaksAA(example02,example)
+result=biCompare(biexample)
+@
+\begin{center}
+\setkeys{Gin}{width=1.3\textwidth}
+<<fig=TRUE,echo=TRUE,width=16,height=9>>=
+plot(result)
+@
+\end{center}
+
+\bibliographystyle{plainnat}
+\begin{thebibliography}{}
+\bibitem[1]{hurst2002ka}
+Hurst, L. D. \begin{em} The Ka/Ks ratio: diagnosing the form of sequence evolution.\end{em} Trends in genetics: TIG 18, 486 (2002).
+
+\bibitem[2]{chen2004positive}
+Chen, L., Perlina, A., Lee, C. J. \begin{em} Positive selection detection in 40,000 human immunodeficiency virus (HIV) type 1 sequences automatically identifies drug resistance and positive fitness mutations in HIV protease and reverse transcriptase. \end{em} Journal of virology 78, 3722-3732 (2004).
+
+\bibitem[3]{cover1991elements}
+Cover, T. M., Thomas, J. A., Wiley, J. \begin{em} Elements of information theory. \end{em} 6, (Wiley Online Library: 1991).
+
+\end{thebibliography}
+
+\end{document}

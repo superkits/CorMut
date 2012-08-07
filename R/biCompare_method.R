@@ -1,0 +1,116 @@
+#define classes
+setClass("biCkaksCodon",
+	representation(
+		seq_formated="DNAStringSet",
+		seq_formated02="DNAStringSet"
+	)
+)
+setClass("biCkaksAA", contains = "biCkaksCodon")
+setClass("biMICodon", contains = "biCkaksCodon")
+setClass("biMIAA", contains = "biCkaksCodon")
+#constructors
+biCkaksCodon<-function(a,b){
+	new("biCkaksCodon",seq_formated=a,seq_formated02=b)
+}
+biCkaksAA<-function(a,b){
+	new("biCkaksAA",seq_formated=a,seq_formated02=b)
+}
+biMICodon<-function(a,b){
+	new("biMICodon",seq_formated=a,seq_formated02=b)
+}
+biMIAA<-function(a,b){
+	new("biMIAA",seq_formated=a,seq_formated02=b)
+}
+
+setGeneric("biCompare", 
+	function (x, ...)
+	standardGeneric("biCompare")
+)
+#ckaksCodon
+setMethod("biCompare",signature(x="biCkaksCodon"),
+	function(x){
+		first=kaksCodon(x@seq_formated)
+		second=kaksCodon(x@seq_formated02)
+		tp01=filterSites(first)
+		tp02=filterSites(second)
+		newPositive=setdiff(tp02$mutation,tp01$mutation)
+		oldPositive=setdiff(tp01$mutation,tp02$mutation)
+		allpositive=union(tp01$mutation,tp02$mutation)
+		ckaks01=ckaksCodon(x@seq_formated,kaks=FALSE,setPosition=allpositive)
+		ckaks02=ckaksCodon(x@seq_formated02,kaks=FALSE,setPosition=allpositive)
+		namelist01=rownames(ckaks01@ckaks)
+		namelist02=rownames(ckaks02@ckaks)
+		taglist=namelist01%in%allpositive
+		taglist02=namelist02%in%allpositive
+		result=new("biCompare",method="ckaksCodon",positiveSite01=oldPositive,positiveSite02=newPositive,
+		state_1=ckaks01@ckaks[taglist,taglist],statistic_1=ckaks01@lod[taglist,taglist],state_2=ckaks02@ckaks[taglist02,taglist02],statistic_2=ckaks02@lod[taglist02,taglist02])
+		return(result)
+	}
+)
+#ckaksAA
+setMethod("biCompare",signature(x="biCkaksAA"),
+	function(x){
+		first=kaksAA(x@seq_formated)
+		second=kaksAA(x@seq_formated02)
+		tp01=filterSites(first)
+		tp02=filterSites(second)
+		newPositive=setdiff(tp02$mutation,tp01$mutation)
+		oldPositive=setdiff(tp01$mutation,tp02$mutation)
+		allpositive=union(tp01$mutation,tp02$mutation)
+		allpcodon=union(tp01$position,tp02$position)
+		ckaks01=ckaksAA(x@seq_formated,kaks=FALSE,setPosition=allpcodon)
+		ckaks02=ckaksAA(x@seq_formated02,kaks=FALSE,setPosition=allpcodon)
+		namelist01=rownames(ckaks01@ckaks)
+		namelist02=rownames(ckaks02@ckaks)
+		taglist=namelist01%in%allpositive
+		taglist02=namelist02%in%allpositive
+		result=new("biCompare",method="ckaksAA",positiveSite01=oldPositive,positiveSite02=newPositive,
+		state_1=ckaks01@ckaks[taglist,taglist],statistic_1=ckaks01@lod[taglist,taglist],state_2=ckaks02@ckaks[taglist02,taglist02],statistic_2=ckaks02@lod[taglist02,taglist02])
+		return(result)
+	}
+)
+
+#miCodon
+setMethod("biCompare",signature(x="biMICodon"),
+	function(x){
+		first=kaksCodon(x@seq_formated)
+		second=kaksCodon(x@seq_formated02)
+		tp01=filterSites(first)
+		tp02=filterSites(second)
+		newPositive=setdiff(tp02$mutation,tp01$mutation)
+		oldPositive=setdiff(tp01$mutation,tp02$mutation)
+		allpositive=union(tp01$mutation,tp02$mutation)
+		ckaks01=miCodon(x@seq_formated,kaks=FALSE,setPosition=allpositive)
+		ckaks02=miCodon(x@seq_formated02,kaks=FALSE,setPosition=allpositive)
+		namelist01=rownames(ckaks01@mi)
+		namelist02=rownames(ckaks02@mi)
+		taglist=namelist01%in%allpositive
+		taglist02=namelist02%in%allpositive
+		result=new("biCompare",method="miCodon",positiveSite01=oldPositive,positiveSite02=newPositive,
+		state_1=ckaks01@mi[taglist,taglist],statistic_1=ckaks01@p.value[taglist,taglist],state_2=ckaks02@mi[taglist02,taglist02],statistic_2=ckaks02@p.value[taglist02,taglist02])
+		return(result)
+	}
+)
+
+#miAA
+setMethod("biCompare",signature(x="biMIAA"),
+	function(x){
+		first=kaksAA(x@seq_formated)
+		second=kaksAA(x@seq_formated02)
+		tp01=filterSites(first)
+		tp02=filterSites(second)
+		newPositive=setdiff(tp02$mutation,tp01$mutation)
+		oldPositive=setdiff(tp01$mutation,tp02$mutation)
+		allpositive=union(tp01$mutation,tp02$mutation)
+		allpcodon=union(tp01$position,tp02$position)
+		ckaks01=miAA(x@seq_formated,kaks=FALSE,setPosition=allpcodon)
+		ckaks02=miAA(x@seq_formated02,kaks=FALSE,setPosition=allpcodon)
+		namelist01=rownames(ckaks01@mi)
+		namelist02=rownames(ckaks02@mi)
+		taglist=namelist01%in%allpositive
+		taglist02=namelist02%in%allpositive
+		result=new("biCompare",method="miAA",positiveSite01=oldPositive,positiveSite02=newPositive,
+		state_1=ckaks01@mi[taglist,taglist],statistic_1=ckaks01@p.value[taglist,taglist],state_2=ckaks02@mi[taglist02,taglist02],statistic_2=ckaks02@p.value[taglist02,taglist02])
+		return(result)
+}
+)
