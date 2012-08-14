@@ -22,7 +22,7 @@ In genetics, the Ka/Ks ratio is the ratio of the number of non-synonymous substi
 \\
 The concept of correlated mutations is one of the basic ideas in evolutionary biology. The amino acid substitution rates are expected to be limited by functional constraints. Given the functional constraints operating on gene, a mutation in one position can be compensated by an additional mutation. Then mutation patterns can be formed by correlated mutations responsible for specific conditions.
 \\
-Here, we developed an R/Bioconductor package to detect the correlated mutations among positive selection sites by combining ka/ks ratio and correlated mutations analysis. The definition of Ka/Ks is based on Chen et al[2]. {\tt CorMut} provides functions for computing kaks for individual site or specific amino and detecting correlated mutation among them. Two methods are provided for detecting correlated mutation, including conditional selection pressure and mutual information, the computation consists of two steps: First, the positive selection sites are detected; Second, the mutation correlation are computed among the positive selection sites. Note that the first step is optional. Meanwhile, {\tt CorMut} facilitates the comparison of the correlated mutations between two conditions by the means of correlated mutation network.
+Here, we developed an R/Bioconductor package to detect the correlated mutations among positive selection sites by combining ka/ks ratio and correlated mutations analysis. The definition of Ka/Ks is based on Chen et al[2]. {\tt CorMut} provides functions for computing kaks for individual site or specific amino acids and detecting correlated mutations among them. Two methods are provided for detecting correlated mutations, including conditional selection pressure and mutual information, the computation consists of two steps: First, the positive selection sites are detected; Second, the mutation correlations are computed among the positive selection sites. Note that the first step is optional. Meanwhile, {\tt CorMut} facilitates the comparison of the correlated mutations between two conditions by the means of correlated mutation network.
 
 \section{Methods}
 
@@ -43,7 +43,7 @@ If LOD > 2, the positive selection is significant.
 \\
 2.2 Mutual information
 \\
-MI content was adopted as a measure of the correlation between residue substitutions[3]. Accordingly, each of the N columns in the multiple sequence alignment generated for a protein of N codons is considered as a discrete random variable $Xi(1 \le i \le N)$. When compute Mutual information between codons, $Xi (1 \le i \le N)$ takes on one of the 20 amino-acid types with some probability, then compute the Mutual information between two sites for specific amino acid substitutions, $Xi (1 \le i \le N)$ were only divided two parts (the specific amino acid mutation and the other) with some probability. Mutual information describes the mutual dependence of the two random variables Xi, Xj, The MI associated the random variables Xi and Xj corresponding to the ith and jth columns is defined as
+MI content was adopted as a measure of the correlation between residue substitutions[3]. Accordingly, each of the N columns in the multiple sequence alignment generated for a protein of N codons is considered as a discrete random variable $Xi(1 \le i \le N)$. When compute Mutual information between codons, $Xi (1 \le i \le N)$ takes on one of the 20 amino acid types with some probability, then compute the Mutual information between two sites for specific amino acid substitutions, $Xi (1 \le i \le N)$ were only divided two parts (the specific amino acid mutation and the other) with some probability. Mutual information describes the mutual dependence of the two random variables Xi, Xj, The MI associated the random variables Xi and Xj corresponding to the ith and jth columns is defined as
 \\
 $I({X_i},{X_j}) = S({X_i}) + S({X_j}) - S({X_i},{X_j}) = S({X_i}) - S({X_i}|{X_j})$
 \\
@@ -55,14 +55,14 @@ is the entropy of Xi,
 \\
 $S({X_i}|{X_j}) =  - \sum\limits_{all{x_i}} {\sum\limits_{all{x_j}} {P({X_i} = {x_i},{X_j} = {x_j})\log P({X_i} = {x_i}|{X_j} = {x_j})} }$
 \\
-is the conditional entropy of Xi given Xj, S(Xi, Xj) is the joint entropy of Xi and Xj. Here P(Xi = xi, Xj = xj) is the joint probability of occurrence of amino-acid types xi and xj at the ith and jth positions, respectively, P(Xi = xi) and P(Xj = xj) are the corresponding singlet probabilities.
+is the conditional entropy of Xi given Xj, S(Xi, Xj) is the joint entropy of Xi and Xj. Here P(Xi = xi, Xj = xj) is the joint probability of occurrence of amino acid types xi and xj at the ith and jth positions, respectively, P(Xi = xi) and P(Xj = xj) are the corresponding singlet probabilities.
 \\
 I(Xi, Xj) is the ijth element of the $N \times N$ MI matrix I corresponding to the examined multiple sequence alignment.
 
 \section{Implementation}
 
 3.1 Process the multiple sequence alignment files
-{\it seqFormat} replace the raw bases with common bases and delete the gaps according to the reference sequence. As one raw base has several common bases, then a base causing amino mutation will be randomly chosen. Here, HIV protease sequences of treatment-naive and treatment will be used as examples.
+{\it seqFormat} replace the raw bases with common bases and delete the gaps according to the reference sequence. As one raw base has several common bases, then a base causing amino acid mutation will be randomly chosen. Here, HIV protease sequences of treatment-naive and treatment will be used as examples.
 <<echo=TRUE>>=
 library(CorMut)
 examplefile=system.file("extdata","PI_treatment.aln",package="CorMut")
@@ -76,7 +76,7 @@ result=kaksCodon(example)
 fresult=filterSites(result)
 head(fresult)
 @
-3.3 Compute kaks for individual amino mutation
+3.3 Compute kaks for individual amino acid mutation
 <<echo=TRUE>>=
 result=kaksAA(example)
 fresult=filterSites(result)
@@ -95,7 +95,7 @@ plot(result)
 fresult=filterSites(result)
 head(fresult)
 @
-3.5 Compute the conditional kaks(conditional selection pressure) among amino mutations
+3.5 Compute the conditional kaks(conditional selection pressure) among amino acid mutations
 <<echo=TRUE>>=
 result=ckaksAA(example)
 @
@@ -109,6 +109,7 @@ fresult=filterSites(result)
 head(fresult)
 @
 3.6 Compute the mutual information among codons
+\\
 An instance with two matrixes will be returned, they are mutation information matrix and p matrix, The ijth element of the $N \times N$ MI matrix indicates the mutation information or p value between position i and position j.
 <<echo=TRUE>>=
 result=miCodon(example)
@@ -122,9 +123,9 @@ plot(result)
 fresult=filterSites(result)
 head(fresult)
 @
-3.7 Compute the mutual information among individual amino mutations
+3.7 Compute the mutual information among individual amino acid mutations
 \par
-An instance with two matrixes will be returned, they are mutation information matrix and p matrix, The ijth element of the $N \times N$ MI matrix indicates the mutation information or p value between two amino mutations.
+An instance with two matrixes will be returned, they are mutation information matrix and p matrix, The ijth element of the $N \times N$ MI matrix indicates the mutation information or p value between two amino acid mutations.
 \par
 <<echo=TRUE>>=
 result=miAA(example)
@@ -141,10 +142,9 @@ head(fresult)
 \par
 3.8 Comparison of the correlated mutations between two conditions by the means of correlated mutation network
 \par
-{\it biCompare} compare the correlated mutation relationship between two conditions, such as HIV treatment-naive and treatment. The result of {\it biCompare} can be visualized by {\it plot} method. Only positive selection codons or amino mutations were displayed on the plot, blue nodes indicate the distinct positive codons or amino mutations of the first condition, that is to say these nodes will be non-positive selection in second condition. While red nodes indicate the distinct positive codons or amino mutations appeared in the second condition. {\it plot} also has an option for displaying the unchanged positive selection nodes in both conditions. If {\it plotUnchanged} is FALSE, the unchanged positive selection nodes in both conditions will not be displayed.
+{\it biCompare} compare the correlated mutation relationship between two conditions, such as HIV treatment-naive and treatment. The result of {\it biCompare} can be visualized by {\it plot} method. Only positive selection codons or amino acid mutations were displayed on the plot, blue nodes indicate the distinct positive codons or amino acid mutations of the first condition, that is to say these nodes will be non-positive selection in second condition. While red nodes indicate the distinct positive codons or amino acid mutations appeared in the second condition. {\it plot} also has an option for displaying the unchanged positive selection nodes in both conditions. If {\it plotUnchanged} is FALSE, the unchanged positive selection nodes in both conditions will not be displayed.
 \par
 <<echo=TRUE>>=
-#biexample=new("biCkaksAA",seq_formated=example02,seq_formated02=example)
 biexample=biCkaksAA(example02,example)
 result=biCompare(biexample)
 @

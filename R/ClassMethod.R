@@ -86,13 +86,13 @@ setMethod("filterSites",signature(x="kaksAA"),
 	}
 )
 setMethod("filterSites",signature(x="MI"),
-	function(x){
+	function(x,p_cut=0.05){
 		fdataframe=c()
 		datanames=rownames(x@mi)
 		for(i in 2:dim(x@p.value)[1]){
 			for(j in 1:(i-1)){
 				if(!is.na(x@p.value[i,j])){
-					if(x@p.value[i,j]<=0.05){
+					if(x@p.value[i,j]<=p_cut){
 						fdataframe=rbind(fdataframe,c(datanames[i],datanames[j],x@mi[i,j],x@p.value[i,j]))
 					}
 				}
@@ -133,7 +133,7 @@ setMethod("plot",signature(x="MI"),
 	filteredata=filterSites(x)
 	targraph=graph.edgelist(as.matrix(filteredata[,1:2]),directed=F)
 	E(targraph)$weight=filteredata$mi
-	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout.kamada.kawai,vertex.label.cex=.7)
+	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout.fruchterman.reingold,vertex.label.cex=.7)
 }
 )
 
@@ -142,7 +142,7 @@ setMethod("plot",signature(x="ckaks"),
 	filteredata=filterSites(x)
 	targraph=graph.edgelist(as.matrix(filteredata[,1:2]),directed=T)
 	E(targraph)$weight=filteredata$ckaks
-	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout.kamada.kawai,vertex.label.cex=.7,edge.arrow.size=0.5)
+	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout.fruchterman.reingold,vertex.label.cex=.7,edge.arrow.size=0.5)
 }
 )
 
@@ -157,8 +157,8 @@ setMethod("plot",signature(x="biCompare"),
 	datanames02=rownames(result@state_2)
 	if(length(datanames01)==0) stop("No positive selection sites for both sequence set!")
 	if(x@method=="ckaksCodon"|x@method=="ckaksAA"){
-		filtertag01=(result@state_1>1)+(result@statistic_1>=lod_cut)!=2
-		filtertag02=(result@state_2>1)+(result@statistic_2>=lod_cut)!=2
+		filtertag01=((result@state_1>1)+(result@statistic_1>=lod_cut))!=2
+		filtertag02=((result@state_2>1)+(result@statistic_2>=lod_cut))!=2
 	}else{
 		filtertag01=(result@statistic_1>p_cut)
 		filtertag02=(result@statistic_2>p_cut)
@@ -178,7 +178,7 @@ setMethod("plot",signature(x="biCompare"),
 	namef_02=rownames(resultmat02)
 	unionrnames=union(namef_01,namef_02)
 	resultf=matrix(0,length(unionrnames),length(unionrnames),dimnames=list(unionrnames,unionrnames))
-	resultf02=resultf
+	resultf02=matrix(0,length(unionrnames),length(unionrnames),dimnames=list(unionrnames,unionrnames))
 	for(i in unionrnames){
 		for(j in unionrnames){
 			if((i%in%namef_01)&(j%in%namef_01)){
