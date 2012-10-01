@@ -1,7 +1,7 @@
 Package: CorMut
 Type: Package
 Title: Detect the correlated mutations based on selection pressure
-Version: 0.99.9
+Version: 1.0.0
 Date: 2012-9-12
 Author: Zhenpeng Li, Yang Huang, Yabo Ouyang, Liying Ma
 Maintainer: Zhenpeng Li<zpli21@gmail.com>
