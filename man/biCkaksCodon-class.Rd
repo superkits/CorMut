@@ -4,10 +4,12 @@
 \alias{biCkaksAA}
 \alias{biMICodon}
 \alias{biMIAA}
+\alias{biJIAA}
 \alias{biCkaksCodon-class}
 \alias{biCkaksAA-class}
 \alias{biMICodon-class}
 \alias{biMIAA-class}
+\alias{biJIAA-class}
 \alias{show,biCkaksCodon-method}
 \alias{show,biCkaksAA-method}
 \alias{show,biMICodon-method}

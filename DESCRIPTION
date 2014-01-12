@@ -1,11 +1,11 @@
 Package: CorMut
 Type: Package
 Title: Detect the correlated mutations based on selection pressure
-Version: 1.5.1
-Date: 2012-9-12
+Version: 1.5.2
+Date: 2014-01-12
 Author: Zhenpeng Li, Yang Huang, Yabo Ouyang, Yiming Shao, Liying Ma
 Maintainer: Zhenpeng Li<zpli21@gmail.com>
-Depends: methods, Biostrings, seqinr,igraph
+Depends: seqinr,igraph
 biocViews: Bioinformatics, Sequencing
-Description: CorMut provides functions for computing kaks for individual sites or specific amino acids and detecting correlated mutations among them. Two methods are provided for detecting correlated mutations ,including conditional selection pressure and mutual information. The computation consists of two steps: First, the positive selection sites are detected; Second, the mutation correlations are computed among the positive selection sites. Note that the first step is optional. Meanwhile, CorMut facilitates the comparison of the correlated mutations between two conditions by the means of correlated mutation network.
+Description: CorMut provides functions for computing kaks for individual sites or specific amino acids and detecting correlated mutations among them. Three methods are provided for detecting correlated mutations ,including conditional selection pressure, mutual information and Jaccard index. The computation consists of two steps: First, the positive selection sites are detected; Second, the mutation correlations are computed among the positive selection sites. Note that the first step is optional. Meanwhile, CorMut facilitates the comparison of the correlated mutations between two conditions by the means of correlated mutation network.
 License: GPL-2

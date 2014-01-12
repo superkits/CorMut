@@ -3,9 +3,11 @@
 \alias{ckaks-class}
 \alias{show,ckaks-method}
 \alias{ckaks}
+\alias{ckaks.CorMut}
+\alias{lod.CorMut}
 % Accessor methods:
-\alias{ckaks,ckaks-method}
-\alias{lod,ckaks-method}
+\alias{ckaks.CorMut,ckaks-method}
+\alias{lod.CorMut,ckaks-method}
 \title{Class "ckaks"}
 \description{ckaks class for representing the ckaksCodon/ckaksAA results}
 \section{Slots}{

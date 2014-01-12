@@ -1,5 +1,5 @@
 %\VignetteIndexEntry{CorMut}
-%\VignetteDepends{methods,Biostrings,seqinr,igraph}
+%\VignetteDepends{seqinr,igraph}
 %\VignetteKeywords{selection pressure,mutual information}
 %\VignettePackage{CorMut}
 
@@ -140,7 +140,23 @@ fresult=filterSites(result)
 head(fresult)
 @
 \par
-3.8 Comparison of the correlated mutations between two conditions by the means of correlated mutation network
+3.8 Compute the Jaccard index among individual amino acid mutations
+\par
+An instance with two matrixes will be returned, they are Jaccard index matrix and p matrix, The ijth element of the $N \times N$ MI matrix indicates the Jaccard index or p value between two amino acid mutations.
+\par
+<<echo=TRUE>>=
+result=jiAA(example)
+@
+\begin{center}
+<<fig=TRUE, echo=TRUE>>=
+plot(result)
+@
+\end{center}
+<<echo=TRUE>>=
+fresult=filterSites(result)
+head(fresult)
+@
+3.9 Comparison of the correlated mutations between two conditions by the means of correlated mutation network
 \par
 {\it biCompare} compare the correlated mutation relationship between two conditions, such as HIV treatment-naive and treatment. The result of {\it biCompare} can be visualized by {\it plot} method. Only positive selection codons or amino acid mutations were displayed on the plot, blue nodes indicate the distinct positive codons or amino acid mutations of the first condition, that is to say these nodes will be non-positive selection in second condition. While red nodes indicate the distinct positive codons or amino acid mutations appeared in the second condition. {\it plot} also has an option for displaying the unchanged positive selection nodes in both conditions. If {\it plotUnchanged} is FALSE, the unchanged positive selection nodes in both conditions will not be displayed.
 \par

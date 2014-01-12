@@ -6,10 +6,12 @@
 \alias{filterSites.kaksAA}
 \alias{filterSites.ckaks}
 \alias{filterSites.MI}
+\alias{filterSites.JI}
 \alias{filterSites,kaksCodon-method}
 \alias{filterSites,kaksAA-method}
 \alias{filterSites,ckaks-method}
 \alias{filterSites,MI-method}
+\alias{filterSites,JI-method}
 \title{filterSites methods}
 \description{
 filterSites implement filterSites methods for kaksCodon,kaksAA,ckaks and MI instances respectively.The functions filter the results of corresponding objects.
@@ -29,6 +31,10 @@ filterSites implement filterSites methods for kaksCodon,kaksAA,ckaks and MI inst
 Filter the results of ckaks object,lod_cut can assign an cutoff for lod confidence score to filter.
 }
 \item{x = "MI"}{
+\code{filterSites(x,p_cut=0.05)}:
+Filter the results of MI object,p_cut can assign an p value cutoff to filter the correlated mutations.
+}
+\item{x = "JI"}{
 \code{filterSites(x,p_cut=0.05)}:
 Filter the results of MI object,p_cut can assign an p value cutoff to filter the correlated mutations.
 }

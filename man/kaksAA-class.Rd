@@ -2,13 +2,18 @@
 \docType{class}
 \alias{kaksAA-class}
 \alias{show,kaksAA-method}
+\alias{seq_num.CorMut}
+\alias{kaks.CorMut}
+\alias{q.CorMut}
+\alias{ka.CorMut}
+\alias{ks.CorMut}
 % Accessor methods:
-\alias{seq_num,kaksAA-method}
-\alias{kaks,kaksAA-method}
-\alias{lod,kaksAA-method}
-\alias{q,kaksAA-method}
-\alias{ka,kaksAA-method}
-\alias{ks,kaksAA-method}
+\alias{seq_num.CorMut,kaksAA-method}
+\alias{kaks.CorMut,kaksAA-method}
+\alias{lod.CorMut,kaksAA-method}
+\alias{q.CorMut,kaksAA-method}
+\alias{ka.CorMut,kaksAA-method}
+\alias{ks.CorMut,kaksAA-method}
 \title{Class "kaksAA"}
 \description{kaksAA class for representing the kaksAA results}
 \section{Slots}{

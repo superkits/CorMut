@@ -1,5 +1,5 @@
 miAA <-
-function(seq_formated,kaks=TRUE,lod_cut=2,setPosition=c()){
+function(seq_formated,kaks=TRUE,lod_cut=2,setPosition=c(),fdr=FALSE){
 	#MI_results=list()
 	if(kaks==TRUE&!is.null(setPosition)) stop("kaks must be FALSE while specify the setPosition")
 	seq_char=tolower(as.character(seq_formated))
@@ -99,8 +99,13 @@ function(seq_formated,kaks=TRUE,lod_cut=2,setPosition=c()){
 			}
 		}
 	}
-	#p value adjustment by FDR
-	pvalue_mat_FDR=matrix(p.adjust(as.vector(pvalue_mat),method="BH",n=sum(!is.na(pvalue_mat))),nrow=dim(pvalue_mat)[1],byrow=F)
+	fdrvalue=fdr
+	if(fdrvalue){
+		pvalue_mat_FDR=pvalue_mat
+	}else{
+		#p value adjustment by FDR
+		pvalue_mat_FDR=matrix(p.adjust(as.vector(pvalue_mat),method="BH",n=sum(!is.na(pvalue_mat))),nrow=dim(pvalue_mat)[1],byrow=F)
+	}
 	rownames(pvalue_mat_FDR)=rownames_result
 	colnames(pvalue_mat_FDR)=rownames_result
 	MI_results=new("MI",mi=result_mat,p.value=pvalue_mat_FDR)

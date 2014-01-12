@@ -7,7 +7,7 @@ Compute the mutual information among codons
 Compute the mutual information among codons, the amino mutation in a site will be treated as whole in computation.
 }
 \usage{
-miCodon(seq_formated, kaks = TRUE, lod_cut = 2, setPosition = c())
+miCodon(seq_formated, kaks = TRUE, lod_cut = 2, setPosition = c(),fdr=FALSE)
 }
 \arguments{
   \item{seq_formated}{
@@ -21,6 +21,9 @@ The LOD confidence score cutoff, the default value is 2. If lod is larger than 2
 }
   \item{setPosition}{
 The positions of sequence to compute. setPosition should be a vector of interger type.
+}
+  \item{fdr}{
+Decide whether use FDR procedure to control the p value of the computation.The default value is False.
 }
 }
 \value{

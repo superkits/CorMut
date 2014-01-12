@@ -3,18 +3,12 @@
 \alias{kaksCodon-class}
 \alias{show,kaksCodon-method}
 % Accessor methods:
-\alias{seq_num}
-\alias{kaks}
-\alias{lod}
-\alias{q}
-\alias{ka}
-\alias{ks}
-\alias{seq_num,kaksCodon-method}
-\alias{kaks,kaksCodon-method}
-\alias{lod,kaksCodon-method}
-\alias{q,kaksCodon-method}
-\alias{ka,kaksCodon-method}
-\alias{ks,kaksCodon-method}
+\alias{seq_num.CorMut,kaksCodon-method}
+\alias{kaks.CorMut,kaksCodon-method}
+\alias{lod.CorMut,kaksCodon-method}
+\alias{q.CorMut,kaksCodon-method}
+\alias{ka.CorMut,kaksCodon-method}
+\alias{ks.CorMut,kaksCodon-method}
 \title{Class "kaksCodon"}
 \description{kaksCodon class for representing the kaksCodon results}
 \section{Slots}{

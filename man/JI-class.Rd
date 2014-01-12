@@ -1,18 +1,17 @@
-\name{MI-class}
+\name{JI-class}
 \docType{class}
-\alias{MI-class}
-\alias{show,MI-method}
-\alias{mi.CorMut}
-\alias{p.value.CorMut}
+\alias{JI-class}
+\alias{show,JI-method}
 % Accessor methods:
-\alias{mi.CorMut,MI-method}
-\alias{p.value.CorMut,MI-method}
-\title{Class "MI"}
-\description{MI class for representing the miCodon/miAA results}
+\alias{ji.CorMut,JI-method}
+\alias{p.value.CorMut,JI-method}
+\title{Class "JI"}
+\description{JI class for representing the jiAA results}
 \section{Slots}{
     \describe{
-    \item{\code{mi}:}{Object of class \code{"matrix"}. Mutual information among codons or amino mutations}
+    \item{\code{JI}:}{Object of class \code{"matrix"}. Mutual information among codons or amino mutations}
     \item{\code{p.value}:}{Object of class \code{"matrix"}. P value for the significance of correlated mutations}
+    \item{\code{OR}:}{Object of class \code{"matrix"}. Odds Ratios for the correlated mutations}
 }
 }
 
@@ -22,12 +21,12 @@
     \item{plot}{\code{signature(object = "MI")}: Plot the influence interaction among mutations for objects of MI class.}
   }
 }
-\seealso{\code{\link{miCodon}},\code{\link{filterSites}}
+\seealso{\code{\link{miAA}},\code{\link{filterSites}}
 }
 
 \examples{
 #examplefile=system.file("extdata","PI_treatment.aln",package="CorMut")
 #example=seqFormat(examplefile)
-#result=miAA(example)
+#result=jiAA(example)
 }
 \keyword{classes}

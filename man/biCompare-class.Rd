@@ -1,21 +1,21 @@
 \name{biCompare-class}
 \docType{class}
 \alias{biCompare-class}
-\alias{method}
-\alias{positiveSite01}
-\alias{positiveSite02}
-\alias{state_1}
-\alias{statistic_1}
-\alias{state_2}
-\alias{statistic_2}
+\alias{method.CorMut}
+\alias{positiveSite01.CorMut}
+\alias{positiveSite02.CorMut}
+\alias{state_1.CorMut}
+\alias{statistic_1.CorMut}
+\alias{state_2.CorMut}
+\alias{statistic_2.CorMut}
 % Accessor methods:
-\alias{method,biCompare-method}
-\alias{positiveSite01,biCompare-method}
-\alias{positiveSite02,biCompare-method}
-\alias{state_1,biCompare-method}
-\alias{statistic_1,biCompare-method}
-\alias{state_2,biCompare-method}
-\alias{statistic_2,biCompare-method}
+\alias{method.CorMut,biCompare-method}
+\alias{positiveSite01.CorMut,biCompare-method}
+\alias{positiveSite02.CorMut,biCompare-method}
+\alias{state_1.CorMut,biCompare-method}
+\alias{statistic_1.CorMut,biCompare-method}
+\alias{state_2.CorMut,biCompare-method}
+\alias{statistic_2.CorMut,biCompare-method}
 \title{Class "biCompare"}
 \description{biCompare class for representing the biCompare results}
 \section{Slots}{

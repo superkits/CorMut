@@ -25,7 +25,13 @@ setClass("MI",
 		p.value="matrix"
 	)
 )
-
+setClass("JI",
+	representation(
+		JI="matrix",
+		p.value="matrix",
+		OR="matrix"
+	)
+)
 setClass("ckaks",
 	representation(
 		ckaks="matrix",
@@ -123,7 +129,26 @@ setMethod("filterSites",signature(x="ckaks"),
 		return(fdataframe)
 }
 )
-
+#filterSites for JI
+setMethod("filterSites",signature(x="JI"),
+	function(x,p_cut=0.05){
+		fdataframe=c()
+		datanames=rownames(x@JI)
+		for(i in 2:dim(x@p.value)[1]){
+			for(j in 1:(i-1)){
+				if(!is.na(x@p.value[i,j])){
+					if((x@p.value[i,j]<=p_cut)&(x@JI[i,j]>0)){
+						fdataframe=rbind(fdataframe,c(datanames[i],datanames[j],x@JI[i,j],x@p.value[i,j]))
+					}
+				}
+			}
+		}
+		if(is.null(fdataframe)) stop("There are no significant correlations among mutations")
+		fdataframe=as.data.frame(fdataframe)
+		names(fdataframe)=c("position1","position2","JI","p.value")
+		return(fdataframe)
+}
+)
 weightnorm=function(x){
 	return((x-min(x))*2/(max(x)-min(x)))
 }
@@ -145,7 +170,15 @@ setMethod("plot",signature(x="ckaks"),
 	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout.fruchterman.reingold,vertex.label.cex=.7,edge.arrow.size=0.5)
 }
 )
-
+#plot JI
+setMethod("plot",signature(x="JI"),
+	function(x){
+	filteredata=filterSites(x)
+	targraph=graph.edgelist(as.matrix(filteredata[,1:2]),directed=F)
+	E(targraph)$weight=filteredata$JI
+	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout.fruchterman.reingold,vertex.label.cex=.7,edge.arrow.size=0.5)
+}
+)
 setMethod("plot",signature(x="biCompare"),
 	function(x,lod_cut=2,p_cut=0.05,plotUnchanged=F){
 	weightnorm=function(m){

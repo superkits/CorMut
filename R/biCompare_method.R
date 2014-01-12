@@ -1,13 +1,11 @@
 #define classes
 setClass("biCkaksCodon",
-	representation(
-		seq_formated="DNAStringSet",
-		seq_formated02="DNAStringSet"
-	)
+	slots=c(seq_formated="character",seq_formated02="character")
 )
 setClass("biCkaksAA", contains = "biCkaksCodon")
 setClass("biMICodon", contains = "biCkaksCodon")
 setClass("biMIAA", contains = "biCkaksCodon")
+setClass("biJIAA", contains = "biCkaksCodon")
 #constructors
 biCkaksCodon<-function(a,b){
 	new("biCkaksCodon",seq_formated=a,seq_formated02=b)
@@ -21,9 +19,11 @@ biMICodon<-function(a,b){
 biMIAA<-function(a,b){
 	new("biMIAA",seq_formated=a,seq_formated02=b)
 }
-
+biJIAA<-function(a,b){
+	new("biJIAA",seq_formated=a,seq_formated02=b)
+}
 setGeneric("biCompare", 
-	function (x, ...)
+	function(x, ...)
 	standardGeneric("biCompare")
 )
 #ckaksCodon
@@ -53,13 +53,19 @@ setMethod("biCompare",signature(x="biCkaksAA"),
 		first=kaksAA(x@seq_formated)
 		second=kaksAA(x@seq_formated02)
 		tp01=filterSites(first)
+		tp01sup=filterSites(first,lod_cut=0)
 		tp02=filterSites(second)
-		newPositive=setdiff(tp02$mutation,tp01$mutation)
-		oldPositive=setdiff(tp01$mutation,tp02$mutation)
-		allpositive=union(tp01$mutation,tp02$mutation)
-		allpcodon=union(tp01$position,tp02$position)
-		ckaks01=ckaksAA(x@seq_formated,kaks=FALSE,setPosition=allpcodon)
-		ckaks02=ckaksAA(x@seq_formated02,kaks=FALSE,setPosition=allpcodon)
+		tp02sup=filterSites(second,lod_cut=0)
+		overlaped=intersect(tp01$mutation,tp02$mutation)
+		newPositive=setdiff(tp02$mutation,tp01sup$mutation)
+		oldPositive=setdiff(tp01$mutation,tp02sup$mutation)
+		#allpositive=union(tp01$mutation,tp02$mutation)
+		#warning
+		allpositive=c(newPositive,oldPositive,overlaped)
+		#allpcodon=union(tp01$position,tp02$position)
+		allpositive_pos=sapply(allpositive,function(xx)c2s(s2c(xx)[2:(nchar(xx)-1)]),USE.NAMES=F)
+		ckaks01=ckaksAA(x@seq_formated,kaks=FALSE,setPosition=allpositive_pos)
+		ckaks02=ckaksAA(x@seq_formated02,kaks=FALSE,setPosition=allpositive_pos)
 		namelist01=rownames(ckaks01@ckaks)
 		namelist02=rownames(ckaks02@ckaks)
 		taglist=namelist01%in%allpositive
@@ -111,6 +117,56 @@ setMethod("biCompare",signature(x="biMIAA"),
 		taglist02=namelist02%in%allpositive
 		result=new("biCompare",method="miAA",positiveSite01=oldPositive,positiveSite02=newPositive,
 		state_1=ckaks01@mi[taglist,taglist],statistic_1=ckaks01@p.value[taglist,taglist],state_2=ckaks02@mi[taglist02,taglist02],statistic_2=ckaks02@p.value[taglist02,taglist02])
+		return(result)
+}
+)
+#jiAA
+setMethod("biCompare",signature(x="biJIAA"),
+	function(x){
+		first=kaksAA(x@seq_formated)
+		second=kaksAA(x@seq_formated02)
+		tp01=filterSites(first)
+		tp01sup=filterSites(first,lod_cut=0)
+		tp02=filterSites(second)
+		tp02sup=filterSites(second,lod_cut=0)
+		overlaped=intersect(tp01$mutation,tp02$mutation)
+		newPositive00=setdiff(tp02$mutation,tp01sup$mutation)
+		oldPositive00=setdiff(tp01$mutation,tp02sup$mutation)
+		newPositive=c()
+		for(npositive in newPositive00){
+			npcheck=tp01sup$mutation%in%npositive
+			if(sum(npcheck)==1){
+				if(tp02$freq[tp02$mutation%in%npositive]>tp01sup$freq[npcheck]){
+					newPositive=append(newPositive,npositive)
+				}
+			}else{
+				newPositive=append(newPositive,npositive)
+			}
+		}
+		oldPositive=c()
+		for(opositive in oldPositive00){
+			opcheck=tp02sup$mutation%in%opositive
+			if(sum(opcheck)==1){
+				if(tp01$freq[tp01$mutation%in%opositive]<tp02sup$freq[opcheck]){
+					oldPositive=append(oldPositive,opositive)
+				}
+			}else{
+				oldPositive=append(oldPositive,opositive)
+			}
+		}
+		#allpositive=union(tp01$mutation,tp02$mutation)
+		#warning
+		allpositive=c(newPositive,oldPositive,overlaped)
+		#allpcodon=union(tp01$position,tp02$position)
+		ckaks01=jiAA(x@seq_formated,kaks=FALSE,setPosition=allpositive)
+		ckaks02=jiAA(x@seq_formated02,kaks=FALSE,setPosition=allpositive)
+		namelist01=rownames(ckaks01@JI)
+		namelist02=rownames(ckaks02@JI)
+		taglist=namelist01%in%allpositive
+		taglist02=namelist02%in%allpositive
+		result=new("biCompare",method="jiAA",positiveSite01=oldPositive,positiveSite02=newPositive,
+		state_1=ckaks01@JI[taglist,taglist],statistic_1=ckaks01@p.value[taglist,taglist],state_2=ckaks02@JI[taglist02,taglist02],
+		statistic_2=ckaks02@p.value[taglist02,taglist02])
 		return(result)
 }
 )

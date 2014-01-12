@@ -3,9 +3,11 @@
 \alias{plot}
 \alias{plot.ckaks}
 \alias{plot.MI}
+\alias{plot.JI}
 \alias{plot.biCompare}
 \alias{plot,ckaks,ANY-method}
 \alias{plot,MI,ANY-method}
+\alias{plot,JI,ANY-method}
 \alias{plot,biCompare,ANY-method}
 \title{ Plot methods for CorMut package}
 \description{
@@ -15,6 +17,7 @@ Plot implement plot methods for ckaksCodon,ckaksAA,miCodon, miAA and biCompare o
 \describe{
 \item{x = "ckaks"}{Plot the results of ckaks object }
 \item{x = "MI"}{Plot the results of MI object }
+\item{x = "JI"}{Plot the results of JI object }
 \item{x = "biCompare"}{ Plot the results of biCompare object}
 }
 }
@@ -30,6 +33,6 @@ result=ckaksAA(example)
 plot(result)
 }
 \seealso{
-\code{\link{ckaksCodon}},\code{\link{ckaksAA}},\code{\link{miCodon}},\code{\link{miAA}}
+\code{\link{ckaksCodon}},\code{\link{ckaksAA}},\code{\link{miCodon}},\code{\link{miAA}},\code{\link{jiAA}}
 }
 \keyword{methods}

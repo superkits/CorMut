@@ -6,10 +6,12 @@
 \alias{biCompare.biCkaksAA}
 \alias{biCompare.biMICodon}
 \alias{biCompare.biMIAA}
+\alias{biCompare.biJIAA}
 \alias{biCompare,biCkaksCodon-method}
 \alias{biCompare,biCkaksAA-method}
 \alias{biCompare,biMICodon-method}
 \alias{biCompare,biMIAA-method}
+\alias{biCompare,biJIAA-method}
 \title{
 biCompare implement biCompare methods for comparison of the correlated mutations between two conditions by the means of correlated mutation network
 }
@@ -22,6 +24,7 @@ Comparison of the correlated mutations between two conditions by the means of co
 \item{x = "biCkaksAA"}{ Compare the correlated mutations(in the unit of amino) between two conditions using condition kaks method.}
 \item{x = "biMICodon"}{ Compare the correlated mutations(in the unit of codon) between two conditions using mutual information method.}
 \item{x = "biMIAA"}{ Compare the correlated mutations(in the unit of amino) between two conditions using mutual information method.}
+\item{x = "biJIAA"}{ Compare the correlated mutations(in the unit of amino) between two conditions using mutual information method.}
 }
 }
 

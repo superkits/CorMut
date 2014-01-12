@@ -40,7 +40,9 @@ function(seq_formated){
 			KA_slist=0;
 		}
 		for(am in amino_set){
-			NY=sum(specific_row!=refaa[i])
+			#NY=sum(specific_row!=refaa[i])
+			#NY should not include "X" amino, i.e. gap
+			NY=sum(((specific_row!=refaa[i])+(specific_row!="X"))==2)
 			NYs=sum(specific_row==am)
 			#compute NtNv
 			targetbp=s2c(refseq)[((i-1)*3+1):(i*3)]
@@ -65,7 +67,11 @@ function(seq_formated){
 			LOD=0
 			Nnum=NS+NY
 			for(ii in NYs:Nnum){
-				LOD=choose(Nnum,ii)*(q^ii)*((1-q)^(Nnum-ii))+LOD
+				per_item=choose(Nnum,ii)*(q^ii)*((1-q)^(Nnum-ii))
+				#avoid the appear of NaN
+				if(per_item!="NaN"){
+					LOD=per_item+LOD
+				}
 				#print(choose(dim(mat)[2],i)*(q^i)*((1-q)^(dim(mat)[2]-i)))
 			}
 			LOD=-log10(LOD)

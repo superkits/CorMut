@@ -1,13 +1,13 @@
-\name{miAA}
-\alias{miAA}
+\name{jiAA}
+\alias{jiAA}
 \title{
-Compute the mutual information among individual amino mutations
+Compute the Jaccard index among individual amino mutations
 }
 \description{
-Compute the mutual information among individual amino mutations, the amino mutations in a specific position will be considered respectively.
+Compute the Jaccard index among individual amino mutations, the amino mutations in a specific position will be considered respectively.
 }
 \usage{
-miAA(seq_formated, kaks = TRUE, lod_cut = 2, setPosition = c(),fdr=FALSE)
+jiAA(seq_formated, kaks = TRUE, lod_cut = 2, setPosition = c(),fdr=FALSE)
 }
 \arguments{
   \item{seq_formated}{
@@ -27,21 +27,19 @@ Decide whether use FDR procedure to control the p value of the computation.The d
 }
 }
 \value{
-A object of MI class will be returned. miAA includes two slots of matrix:mi and p.value, which indicate the mutual information and p value respectively.
+A object of JI class will be returned. JI class includes three slots: JI, p.value and OR, which indicate the Jaccard index, p value and odds ratios respectively.
 }
-\references{
-Cover, T. M., Thomas, J. A. & Wiley, J. Elements of information theory. 6, (Wiley Online Library: 1991).
-}
+
 \author{
 Zhenpeng Li
 }
 
 \seealso{
-\code{\link{filterSites}},\code{\link{miCodon}}
+\code{\link{filterSites}},\code{\link{miAA}}
 }
 
 \examples{
 examplefile=system.file("extdata","PI_treatment.aln",package="CorMut")
 example=seqFormat(examplefile)
-result=miAA(example)
+result=jiAA(example)
 }

@@ -9,18 +9,18 @@ Process the multiple sequence alignment files
 Process the multiple sequence alignment files, the results can be used for the other functional functions. Note that the reference sequence should be included as the first sequence.
 }
 \usage{
-seqFormat(x, format = c("clustal","fasta","DNAStringSet"))
+seqFormat(x, format = c("clustal","fasta","mase","phylip","msf"))
 }
 \arguments{
   \item{x}{
 multiple sequence alignment files
 }
   \item{format}{
-a character string specifying the format of the file or class : clustal, fasta and DNAStringSet, refer to read.DNAMultipleAlignment function in Biostrings package for details.
+a character string specifying the format of the file: "clustal","fasta","mase","phylip","msf", refer to read.alignment function in seqinr package for details.
 }
 }
 \value{
-A DNAStringSet instance is returned.
+A vector of sequences with names is returned.
 }
 \note{
 To ensure an exact result, the reference sequence should be included in the alignment as the first sequence.
