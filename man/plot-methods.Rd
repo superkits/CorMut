@@ -5,10 +5,10 @@
 \alias{plot.MI}
 \alias{plot.JI}
 \alias{plot.biCompare}
-\alias{plot,ckaks,ANY-method}
-\alias{plot,MI,ANY-method}
-\alias{plot,JI,ANY-method}
-\alias{plot,biCompare,ANY-method}
+\alias{plot,ckaks-method}
+\alias{plot,MI-method}
+\alias{plot,JI-method}
+\alias{plot,biCompare-method}
 \title{ Plot methods for CorMut package}
 \description{
 Plot implement plot methods for ckaksCodon,ckaksAA,miCodon, miAA and biCompare objects respectively. Plot visualize the mutation correlation among sites or amino mutations.
