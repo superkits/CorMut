@@ -58,7 +58,11 @@ $S({X_i}|{X_j}) =  - \sum\limits_{all{x_i}} {\sum\limits_{all{x_j}} {P({X_i} = {
 is the conditional entropy of Xi given Xj, S(Xi, Xj) is the joint entropy of Xi and Xj. Here P(Xi = xi, Xj = xj) is the joint probability of occurrence of amino acid types xi and xj at the ith and jth positions, respectively, P(Xi = xi) and P(Xj = xj) are the corresponding singlet probabilities.
 \\
 I(Xi, Xj) is the ijth element of the $N \times N$ MI matrix I corresponding to the examined multiple sequence alignment.
-
+\\
+2.3 Jaccard index
+\\
+Jaccard index measures similarity between two variables, and it has been widely used to measure the correlated mutations. For a pair of mutations X and Y, the Jaccard index is calculated as Nxy/(Nxy+Nx0+Ny0), where Nxy represents the number of sequences where X and Y are jointly mutated, Nx0 represents the number of sequences with only X mutation, but not Y, and Ny0 represents the sequences with only Y mutation, but not X. The computation was deemed to effectively avoid the exaggeration of rare mutation pairs where the number of sequences without either X or Y is very large.
+\\
 \section{Implementation}
 
 3.1 Process the multiple sequence alignment files
