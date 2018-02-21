@@ -1,3 +1,8 @@
+importFrom("graphics", "par")
+importFrom("stats", "dbinom", "fisher.test", "p.adjust")
+importFrom("seqinr", "s2c", "c2s")
+importFrom("igraph", "graph.adjacency","graph.edgelist", "V", "E","E<-","layout_randomly","layout_as_star")
+importFrom("methods", "isGeneric", "new", "setGeneric")
 export(
 	seqFormat,
 	kaksCodon,

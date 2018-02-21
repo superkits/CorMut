@@ -120,7 +120,6 @@ function(xx,refseq=""){
 	Rawdict[["k"]]=c("g","t")
 	Rawdict[["d"]]=c("a","g","t")
 	#test
-
 	for(i in 1:length(seqf)){
 		for(j in 1:length(seqf[[i]])){
 			if(j%%3==1){ tris=seqf[[i]][j:(j+2)]
@@ -130,7 +129,7 @@ function(xx,refseq=""){
 			#print(tris)
 			if(seqf[[i]][j] %in% raw_set){
 				count=0
-				baked=0
+				#baked=0
 				for(k in Rawdict[[seqf[[i]][j]]]){
 					if(j%%3==1|j%%3==2){
 						tris[j%%3]=k

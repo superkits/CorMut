@@ -15,10 +15,10 @@ Plot implement plot methods for ckaksCodon,ckaksAA,miCodon, miAA and biCompare o
 }
 \section{Methods}{
 \describe{
-\item{x = "ckaks"}{Plot the results of ckaks object }
-\item{x = "MI"}{Plot the results of MI object }
-\item{x = "JI"}{Plot the results of JI object }
-\item{x = "biCompare"}{ Plot the results of biCompare object}
+\item{x = "ckaks"}{Plot the results of ckaks object. The paramater "layout_reset" was provided to set the layout of the network. You can refer to "layout_ function" in igraph package to get the graph layouts }
+\item{x = "MI"}{Plot the results of MI object. The paramater "layout_reset" was provided to set the layout of the network. You can refer to "layout_ function" in igraph package to get the graph layouts}
+\item{x = "JI"}{Plot the results of JI object. The paramater "layout_reset" was provided to set the layout of the network. You can refer to "layout_ function" in igraph package to get the graph layouts}
+\item{x = "biCompare"}{ Plot the results of biCompare object. The paramater "layout_reset" was provided to set the layout of the network. You can refer to "layout_ function" in igraph package to get the graph layouts}
 }
 }
 

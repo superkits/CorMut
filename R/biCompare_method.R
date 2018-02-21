@@ -126,40 +126,17 @@ setMethod("biCompare",signature(x="biJIAA"),
 		first=kaksAA(x@seq_formated)
 		second=kaksAA(x@seq_formated02)
 		tp01=filterSites(first)
-		tp01sup=filterSites(first,lod_cut=0)
+		#tp01sup=filterSites(first,lod_cut=0)
 		tp02=filterSites(second)
-		tp02sup=filterSites(second,lod_cut=0)
+		#tp02sup=filterSites(second,lod_cut=0)
 		overlaped=intersect(tp01$mutation,tp02$mutation)
-		newPositive00=setdiff(tp02$mutation,tp01sup$mutation)
-		oldPositive00=setdiff(tp01$mutation,tp02sup$mutation)
-		newPositive=c()
-		for(npositive in newPositive00){
-			npcheck=tp01sup$mutation%in%npositive
-			if(sum(npcheck)==1){
-				if(tp02$freq[tp02$mutation%in%npositive]>tp01sup$freq[npcheck]){
-					newPositive=append(newPositive,npositive)
-				}
-			}else{
-				newPositive=append(newPositive,npositive)
-			}
-		}
-		oldPositive=c()
-		for(opositive in oldPositive00){
-			opcheck=tp02sup$mutation%in%opositive
-			if(sum(opcheck)==1){
-				if(tp01$freq[tp01$mutation%in%opositive]<tp02sup$freq[opcheck]){
-					oldPositive=append(oldPositive,opositive)
-				}
-			}else{
-				oldPositive=append(oldPositive,opositive)
-			}
-		}
-		#allpositive=union(tp01$mutation,tp02$mutation)
-		#warning
+		newPositive=setdiff(tp02$mutation,tp01$mutation)
+		oldPositive=setdiff(tp01$mutation,tp02$mutation)
 		allpositive=c(newPositive,oldPositive,overlaped)
+		allmutations_pos=sapply(allpositive,function(xxx)substr(xxx,2,(nchar(xxx)-1)),USE.NAMES=F)
 		#allpcodon=union(tp01$position,tp02$position)
-		ckaks01=jiAA(x@seq_formated,kaks=FALSE,setPosition=allpositive)
-		ckaks02=jiAA(x@seq_formated02,kaks=FALSE,setPosition=allpositive)
+		ckaks01=jiAA(x@seq_formated,kaks=FALSE,setPosition=allmutations_pos)
+		ckaks02=jiAA(x@seq_formated02,kaks=FALSE,setPosition=allmutations_pos)
 		namelist01=rownames(ckaks01@JI)
 		namelist02=rownames(ckaks02@JI)
 		taglist=namelist01%in%allpositive

@@ -12,13 +12,13 @@ CorMut provides functions for computing kaks for individual site or specific ami
 \tabular{ll}{
 Package: \tab CorMut\cr
 Type: \tab Package\cr
-Version: \tab 1.5.5\cr
-Date: \tab 2014-03-18\cr
+Version: \tab 1.21.1\cr
+Date: \tab 2018-02-21\cr
 License: \tab GPL-2\cr
 }
 }
 \author{
-Zhenpeng Li, Yang Huang, Yabo Ouyang, Liying Ma
+Zhenpeng Li
 Maintainer: Zhenpeng Li <zpli21@gmail.com>
 }
 \references{

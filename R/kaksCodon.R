@@ -33,12 +33,19 @@ function(seq_formated){
 		targetbp=s2c(refseq)[((i-1)*3+1):(i*3)]
 		#print(targetbp)
 		NtNv=Ntnv(targetbp)
-		random_model=(NtNv$Nat*fvft$ft+NtNv$Nav*fvft$fv)/(NtNv$Nst*fvft$ft+NtNv$Nsv*fvft$fv)
-		if((random_model==Inf)|(random_model=="NaN")|(random_model==0))random_model=1
+		model_fenzi=NtNv$Nat*fvft$ft+NtNv$Nav*fvft$fv
+		model_fenmu=NtNv$Nst*fvft$ft+NtNv$Nsv*fvft$fv
+		if(model_fenmu==0|model_fenzi==0){
+			random_model=((NtNv$Nat+1)*fvft$ft+(NtNv$Nav+1)*fvft$fv)/((NtNv$Nst+1)*fvft$ft+(NtNv$Nsv+1)*fvft$fv)
+		}else{
+			random_model=model_fenzi/model_fenmu
+		}
+		#random_model=(NtNv$Nat*fvft$ft+NtNv$Nav*fvft$fv)/(NtNv$Nst*fvft$ft+NtNv$Nsv*fvft$fv)
+		#if((random_model==Inf)|(random_model=="NaN")|(random_model==0))random_model=1
 		if(NY==0&NS==0){
 			KaKs=1
 		}else if(NY!=0&NS==0){
-			KaKs=(NY)/random_model
+			KaKs=((NY+1)/(NS+1))/random_model
 		}else{
 			KaKs=(NY/NS)/random_model
 		}
@@ -49,7 +56,8 @@ function(seq_formated){
 		#print(NY)
 		Nnum=NS+NY
 		for(ii in NY:Nnum){
-			LOD=choose(Nnum,ii)*(q^ii)*((1-q)^(Nnum-ii))+LOD
+			#LOD=choose(Nnum,ii)*(q^ii)*((1-q)^(Nnum-ii))+LOD
+			LOD=dbinom(ii,Nnum,q)+LOD
 			#print(choose(dim(mat)[2],i)*(q^i)*((1-q)^(dim(mat)[2]-i)))
 		}
 		#print(LOD)

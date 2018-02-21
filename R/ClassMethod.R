@@ -63,7 +63,8 @@ setMethod("filterSites",signature(x="kaksCodon"),
 		mutation=prange[condition]
 		kaks=x@kaks[condition]
 		lod=x@lod[condition]
-		mutFreq=sapply((x@ka[condition])/x@seq_num,function(xx)round(xx,digits=4))
+		#mutFreq=sapply((x@ka[condition])/x@seq_num,function(xx)round(xx,digits=4))
+		mutFreq=round((x@ka[condition])/x@seq_num,digits=4)
 		fdataframe=data.frame(mutation=mutation,kaks=kaks,lod=lod,mutFreq=mutFreq)
 		names(fdataframe)=c("mutation","kaks","lod","freq")
 		return(fdataframe)
@@ -154,36 +155,36 @@ weightnorm=function(x){
 }
 
 setMethod("plot",signature(x="MI"),
-	function(x){
+	function(x,layout_reset=layout_randomly){
 	filteredata=filterSites(x)
 	targraph=graph.edgelist(as.matrix(filteredata[,1:2]),directed=F)
 	E(targraph)$weight=filteredata$mi
-	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout.fruchterman.reingold,vertex.label.cex=.7)
+	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout_reset,vertex.label.cex=.7,vertex.frame.color=NA)
 }
 )
 
 setMethod("plot",signature(x="ckaks"),
-	function(x){
+	function(x,layout_reset=layout_randomly){
 	filteredata=filterSites(x)
 	targraph=graph.edgelist(as.matrix(filteredata[,1:2]),directed=T)
 	E(targraph)$weight=filteredata$ckaks
-	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout.fruchterman.reingold,vertex.label.cex=.7,edge.arrow.size=0.5)
+	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout_reset,vertex.label.cex=.7,edge.arrow.size=0.5,vertex.frame.color=NA)
 }
 )
 #plot JI
 setMethod("plot",signature(x="JI"),
-	function(x){
+	function(x,layout_reset=layout_randomly){
 	filteredata=filterSites(x)
 	targraph=graph.edgelist(as.matrix(filteredata[,1:2]),directed=F)
 	E(targraph)$weight=filteredata$JI
-	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout.fruchterman.reingold,vertex.label.cex=.7,edge.arrow.size=0.5)
+	plot(targraph,vertex.label=V(targraph)$name,edge.width=weightnorm(E(targraph)$weight),layout=layout_reset,vertex.label.cex=.7,edge.arrow.size=0.5,vertex.frame.color=NA)
 }
 )
 setMethod("plot",signature(x="biCompare"),
-	function(x,lod_cut=2,p_cut=0.05,plotUnchanged=F){
+	function(x,lod_cut=2,p_cut=0.05,plotUnchanged=F,layout_reset=layout_as_star){
 	weightnorm=function(m){
 		if(length(m)==0) return(0)
-		return((m-min(m))*2/(max(m)-min(m)))
+		return(((m-min(m))*2/(max(m)-min(m)))+0.5)
 	}
 	result=x
 	datanames01=rownames(result@state_1)
@@ -231,12 +232,12 @@ setMethod("plot",signature(x="biCompare"),
 	}
 	#lay=layout.svd(zz02)
 	#lay=layout.kamada.kawai(zz02,kkconstSets=vcount(zz01)**10)
-	lay=layout.fruchterman.reingold(zz02,repulserad=vcount(zz02)*1.5)
+	lay=layout_reset(zz02)
 	par(mfrow=c(1,2),mai=c(0.05,0.05,0.05,0.05))
 	nodecolvector=rep("grey",times=length(V(zz01)$name))
-	nodecolvector[(V(zz01)$name)%in%x@positiveSite01]="skyblue1"
+	nodecolvector[(V(zz01)$name)%in%x@positiveSite01]="steelblue"
 	nodecolvector[(V(zz01)$name)%in%x@positiveSite02]="lightpink1"
-	plot(zz01,vertex.label=V(zz01)$name,layout=lay,edge.arrow.size=0.3,vertex.color=nodecolvector,edge.color="olivedrab4",edge.width=weightnorm(E(zz01)$weight))
-	plot(zz02,vertex.label=V(zz02)$name,layout=lay,edge.arrow.size=0.3,vertex.color=nodecolvector,edge.color="olivedrab4",edge.width=weightnorm(E(zz02)$weight))
+	plot(zz01,vertex.label=V(zz01)$name,layout=lay,edge.arrow.size=0.3,vertex.color=nodecolvector,edge.color="green",edge.width=weightnorm(E(zz01)$weight),vertex.frame.color=NA)
+	plot(zz02,vertex.label=V(zz02)$name,layout=lay,edge.arrow.size=0.3,vertex.color=nodecolvector,edge.color="green",edge.width=weightnorm(E(zz02)$weight),vertex.frame.color=NA)
 }
 )

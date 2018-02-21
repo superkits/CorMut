@@ -42,7 +42,6 @@ jiAA <-function(seq_formated,kaks=TRUE,lod_cut=2,setPosition=c(),fdr=FALSE){
 			fmat=matrix(c(overlapv,v22,v33,N_overlapv),byrow=T,nrow=2)
 			leastone=sum((onev+twov)>=1)
 			jaindex=overlapv/leastone
-			#compute mutual information
 			result_mat[AAa,AAb]=jaindex
 			result_mat[AAb,AAa]=jaindex
 			#if(overlapv==0) next

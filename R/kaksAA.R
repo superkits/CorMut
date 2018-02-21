@@ -50,8 +50,15 @@ function(seq_formated){
 			#print(targetbp)
 			NtNv=Ntnv_aa(targetbp,aa_m=am)
 			#ensure ka/ka has meaning NO zero
-			random_model=(NtNv$Nat*fvft$ft+NtNv$Nav*fvft$fv)/(NtNv$Nst*fvft$ft+NtNv$Nsv*fvft$fv)
-			if((random_model==Inf)|(random_model=="NaN")|(random_model==0))random_model=1
+			model_fenzi=NtNv$Nat*fvft$ft+NtNv$Nav*fvft$fv
+			model_fenmu=NtNv$Nst*fvft$ft+NtNv$Nsv*fvft$fv
+			if(model_fenmu==0|model_fenzi==0){
+				random_model=((NtNv$Nat+1)*fvft$ft+(NtNv$Nav+1)*fvft$fv)/((NtNv$Nst+1)*fvft$ft+(NtNv$Nsv+1)*fvft$fv)
+			}else{
+				random_model=model_fenzi/model_fenmu
+			}
+			#print(c(NtNv$Nst,fvft$ft,NtNv$Nsv,fvft$fv,random_model,NYs/NS))
+			#if((random_model==Inf)|(random_model=="NaN")|(random_model==0))random_model=1
 			KaKs=(NYs/NS)/random_model
 			names(KaKs)=names_label
 			KaKs_slist=append(KaKs_slist,KaKs)
@@ -67,11 +74,12 @@ function(seq_formated){
 			LOD=0
 			Nnum=NS+NY
 			for(ii in NYs:Nnum){
-				per_item=choose(Nnum,ii)*(q^ii)*((1-q)^(Nnum-ii))
-				#avoid the appear of NaN
-				if(per_item!="NaN"){
-					LOD=per_item+LOD
-				}
+				#per_item=choose(Nnum,ii)*(q^ii)*((1-q)^(Nnum-ii))
+				per_item=dbinom(ii,Nnum,q)
+				#if(per_item=="NaN") print(per_item)
+				#if(per_item!="NaN"){
+				LOD=per_item+LOD
+				#}
 				#print(choose(dim(mat)[2],i)*(q^i)*((1-q)^(dim(mat)[2]-i)))
 			}
 			LOD=-log10(LOD)

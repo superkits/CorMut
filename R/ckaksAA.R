@@ -20,6 +20,7 @@ function(seq_formated,kaks=T,lod_cut=2,setPosition=c()){
 		kaksfilter=kaksAA(seq_formated)
 		positions=1:length(kaksfilter@kaks)
 		positionf=c()
+		#selecting the positive selection mutations
 		positionaa=list()
 		for(i in 1:length(kaksfilter@kaks)){
 			positionnames=names(kaksfilter@kaks[[i]])
@@ -124,14 +125,14 @@ function(seq_formated,kaks=T,lod_cut=2,setPosition=c()){
 					if(Mij==0){
 						fenzi_ij=0
 					}else if(Mij>0&SiMj==0){
-						fenzi_ij=Mij
+						fenzi_ij=(Mij+1)/(SiMj+1)
 					}else{
 						fenzi_ij=Mij/SiMj
 					}
 					if(Mij==0){
 						fenzi_ji=0
 					}else if(Mij>0&SjMi==0){
-						fenzi_ji=Mij
+						fenzi_ji=(Mij+1)/(SjMi+1)
 					}else{
 						fenzi_ji=Mij/SjMi
 					}
@@ -149,18 +150,18 @@ function(seq_formated,kaks=T,lod_cut=2,setPosition=c()){
 					if(MiNj==0&SiNj==0){
 						fenmu_ij=1
 					}else if(MiNj!=0&SiNj==0){
-						fenmu_ij=MiNj
+						fenmu_ij=(MiNj+1)/(SiNj+1)
 					}else if(MiNj==0&SiNj!=0){
-						fenmu_ij=1/SiNj
+						fenmu_ij=(MiNj+1)/(SiNj+1)
 					}else{
 						fenmu_ij=MiNj/SiNj
 					}
 					if(MjNi==0&SjNi==0){
 						fenmu_ji=1
 					}else if(MjNi!=0&SjNi==0){
-						fenmu_ji=MjNi
+						fenmu_ji=(MjNi+1)/(SjNi+1)
 					}else if(MjNi==0&SjNi!=0){
-						fenmu_ji=1/SjNi
+						fenmu_ji=(MjNi+1)/(SjNi+1)
 					}else{
 						fenmu_ji=MjNi/SjNi
 					}
@@ -181,11 +182,13 @@ function(seq_formated,kaks=T,lod_cut=2,setPosition=c()){
 					#q value is changed
 					q=q_value[[as.character(i)]][[names_label01]]
 					for(ii in Mij:Nnumi){
-						LODi=choose(Nnumi,ii)*(q^ii)*((1-q)^(Nnumi-ii))+LODi
+						#LODi=choose(Nnumi,ii)*(q^ii)*((1-q)^(Nnumi-ii))+LODi
+						LODi=dbinom(ii,Nnumi,q)+LODi
 					}
 					q=q_value[[as.character(j)]][[names_label02]]
 					for(jj in Mij:Nnumj){
-						LODj=choose(Nnumj,jj)*(q^jj)*((1-q)^(Nnumj-jj))+LODj
+						#LODj=choose(Nnumj,jj)*(q^jj)*((1-q)^(Nnumj-jj))+LODj
+						LODj=dbinom(jj,Nnumj,q)+LODj
 					}
 					coltag01=paste(c(refaa[i],i,am),collapse="")
 					coltag02=paste(c(refaa[j],j,am02),collapse="")

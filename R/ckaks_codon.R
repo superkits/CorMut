@@ -70,13 +70,17 @@ function(seq_formated,kaks=TRUE,lod_cut=2,setPosition=c()){
 			Mij=sum((Mi+Mj)==2)
 			SjMi=sum((Mi+Sj)==2)
 			SiMj=sum((Mj+Si)==2)
-			#add
-			if(Mij==0)Mij=1
-			if(SjMi==0)SjMi=1
-			if(SiMj==0)SiMj=1
-			#
-			fenzi_ij=Mij/SiMj
-			fenzi_ji=Mij/SjMi
+			#smoothing
+			if(SiMj==0){
+				fenzi_ij=(Mij+1)/(SiMj+1)
+			}else{
+				fenzi_ij=Mij/SiMj
+			}
+			if(SjMi==0){
+				fenzi_ji=(Mij+1)/(SjMi+1)
+			}else{
+				fenzi_ji=Mij/SjMi
+				}
 			#fenmu
 			Nj=codonj==codonjo
 			MjNi=sum((Mj+Ni)==2)
@@ -89,8 +93,16 @@ function(seq_formated,kaks=TRUE,lod_cut=2,setPosition=c()){
 			if(SjNi==0)SjNi=1
 			if(SiNj==0)SiNj=1
 			#
-			fenmu_ij=MiNj/SiNj
-			fenmu_ji=MjNi/SjNi
+			if(MiNj==0|SiNj==0){
+				fenmu_ij=(MiNj+1)/(SiNj+1)
+			}else{
+				fenmu_ij=MiNj/SiNj
+			}
+			if(MjNi==0|SjNi==0){
+				fenmu_ji=(MjNi+1)/(SjNi+1)
+			}else{
+				fenmu_ji=MjNi/SjNi
+			}
 			matrix_c[as.character(i),as.character(j)]=fenzi_ji/fenmu_ji
 			matrix_c[as.character(j),as.character(i)]=fenzi_ij/fenmu_ij
 			#LOD compute
@@ -101,12 +113,13 @@ function(seq_formated,kaks=TRUE,lod_cut=2,setPosition=c()){
 			LODj=0
 			q=q_result[[as.character(i)]]
 			for(ii in Mij:Nnumi){
-				#print(c(q,ii))
-				LODi=choose(Nnumi,ii)*(q^ii)*((1-q)^(Nnumi-ii))+LODi
+				#LODi=choose(Nnumi,ii)*(q^ii)*((1-q)^(Nnumi-ii))+LODi
+				LODi=dbinom(ii,Nnumi,q)+LODi
 			}
 			q=q_result[[as.character(j)]]
 			for(jj in Mij:Nnumj){
-				LODj=choose(Nnumj,jj)*(q^jj)*((1-q)^(Nnumj-jj))+LODj
+				#LODj=choose(Nnumj,jj)*(q^jj)*((1-q)^(Nnumj-jj))+LODj
+				LODj=dbinom(jj,Nnumj,q)+LODj
 			}
 			#print(c(LODi,LODj))
 			matrix_LOD[as.character(i),as.character(j)]=-log10(LODj)
